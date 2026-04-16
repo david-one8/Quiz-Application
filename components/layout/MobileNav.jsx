@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, FileText, CircleHelp, PenSquare, Trophy } from "lucide-react";
+import { LayoutDashboard, FileText, CircleHelp, PenSquare, Trophy, Users } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { cn } from "@/lib/utils";
 import { DASHBOARD_LINKS } from "@/lib/constants";
@@ -11,6 +11,7 @@ const icons = {
   "/dashboard": LayoutDashboard,
   "/dashboard/quizzes": FileText,
   "/dashboard/questions": CircleHelp,
+  "/dashboard/users": Users,
   "/dashboard/attempts": PenSquare,
   "/dashboard/results": Trophy
 };
@@ -26,7 +27,13 @@ export default function MobileNav() {
     <div className="fixed bottom-4 left-4 right-4 z-40 rounded-3xl border border-slate-200 bg-white/95 p-2 shadow-2xl backdrop-blur dark:border-slate-800 dark:bg-slate-900/95 lg:hidden">
       <div
         className={`grid gap-2 ${
-          items.length === 3 ? "grid-cols-3" : items.length === 4 ? "grid-cols-4" : "grid-cols-5"
+          items.length >= 6
+            ? "grid-cols-3"
+            : items.length === 3
+              ? "grid-cols-3"
+              : items.length === 4
+                ? "grid-cols-4"
+                : "grid-cols-5"
         }`}
       >
         {items.map((item) => {
