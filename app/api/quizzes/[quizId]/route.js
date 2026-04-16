@@ -3,16 +3,25 @@ import { db } from "@/lib/db";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { canManageQuiz, isManager, PUBLIC_USER_SELECT } from "@/lib/constants";
+import { getInitializationErrorResponse } from "@/lib/bootstrap";
 import { quizSchema } from "@/lib/validations";
 import { ZodError } from "zod";
 
 export async function GET(_, { params }) {
   try {
+    const initializationError = await getInitializationErrorResponse();
+
+    if (initializationError) {
+      return initializationError;
+    }
+
+    const { quizId } = await params;
+
     const session = await getServerSession(authOptions);
     const user = session?.user ?? null;
 
     const quiz = await db.quiz.findUnique({
-      where: { id: params.quizId },
+      where: { id: quizId },
       include: {
         createdBy: {
           select: PUBLIC_USER_SELECT
@@ -52,6 +61,14 @@ export async function GET(_, { params }) {
 
 export async function PUT(req, { params }) {
   try {
+    const initializationError = await getInitializationErrorResponse();
+
+    if (initializationError) {
+      return initializationError;
+    }
+
+    const { quizId } = await params;
+
     const session = await getServerSession(authOptions);
     if (!session?.user?.id) {
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
@@ -61,7 +78,7 @@ export async function PUT(req, { params }) {
     }
 
     const existingQuiz = await db.quiz.findUnique({
-      where: { id: params.quizId },
+      where: { id: quizId },
       select: { id: true, createdById: true }
     });
 
@@ -76,7 +93,7 @@ export async function PUT(req, { params }) {
     const validated = quizSchema.parse(body);
 
     const updated = await db.quiz.update({
-      where: { id: params.quizId },
+      where: { id: quizId },
       data: {
         ...validated
       }
@@ -97,6 +114,14 @@ export async function PUT(req, { params }) {
 
 export async function DELETE(_, { params }) {
   try {
+    const initializationError = await getInitializationErrorResponse();
+
+    if (initializationError) {
+      return initializationError;
+    }
+
+    const { quizId } = await params;
+
     const session = await getServerSession(authOptions);
     if (!session?.user?.id) {
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
@@ -106,7 +131,7 @@ export async function DELETE(_, { params }) {
     }
 
     const existingQuiz = await db.quiz.findUnique({
-      where: { id: params.quizId },
+      where: { id: quizId },
       select: { id: true, createdById: true }
     });
 
@@ -118,7 +143,7 @@ export async function DELETE(_, { params }) {
     }
 
     await db.quiz.delete({
-      where: { id: params.quizId }
+      where: { id: quizId }
     });
 
     return NextResponse.json({ message: "Quiz deleted successfully" });

@@ -1,27 +1,36 @@
 import { NextResponse } from "next/server";
-import { db } from "@/lib/db";
 import bcrypt from "bcryptjs";
-import { registerSchema } from "@/lib/validations";
-import { SAFE_USER_SELECT } from "@/lib/constants";
-import { getInitializationErrorResponse } from "@/lib/bootstrap";
 import { ZodError } from "zod";
+import { db } from "@/lib/db";
+import { SAFE_USER_SELECT } from "@/lib/constants";
+import { setupSchema } from "@/lib/validations";
+import { getSetupConflictResponse, getSetupState } from "@/lib/bootstrap";
+
+export async function GET() {
+  const { initialized, adminCount } = await getSetupState();
+
+  return NextResponse.json({
+    initialized,
+    adminCount
+  });
+}
 
 export async function POST(req) {
   try {
-    const initializationError = await getInitializationErrorResponse();
+    const { initialized } = await getSetupState();
 
-    if (initializationError) {
-      return initializationError;
+    if (initialized) {
+      return getSetupConflictResponse();
     }
 
     const body = await req.json();
-    const validated = registerSchema.parse(body);
+    const validated = setupSchema.parse(body);
 
-    const exists = await db.user.findUnique({
+    const existingUser = await db.user.findUnique({
       where: { email: validated.email }
     });
 
-    if (exists) {
+    if (existingUser) {
       return NextResponse.json({ message: "Email already registered" }, { status: 400 });
     }
 
@@ -29,10 +38,9 @@ export async function POST(req) {
 
     const user = await db.user.create({
       data: {
-        name: validated.name,
-        email: validated.email,
+        ...validated,
         password: hashedPassword,
-        role: "STUDENT"
+        role: "ADMIN"
       },
       select: SAFE_USER_SELECT
     });
@@ -41,13 +49,13 @@ export async function POST(req) {
   } catch (error) {
     if (error instanceof ZodError) {
       return NextResponse.json(
-        { message: error.issues[0]?.message || "Invalid registration data" },
+        { message: error.issues[0]?.message || "Invalid setup data" },
         { status: 400 }
       );
     }
 
     return NextResponse.json(
-      { message: error?.message || "Registration failed" },
+      { message: error?.message || "Failed to complete setup" },
       { status: 500 }
     );
   }
