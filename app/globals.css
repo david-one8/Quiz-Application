@@ -1,0 +1,61 @@
+@import "tailwindcss";
+
+@layer base {
+  * {
+    @apply border-slate-200 dark:border-slate-800;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply min-h-screen text-slate-900 antialiased dark:text-slate-100;
+    background-color: #f8fafc;
+  }
+
+  .dark body {
+    background-color: #0b1220;
+  }
+}
+
+@layer utilities {
+  .app-shell {
+    min-height: 100vh;
+    background-image: radial-gradient(circle at top, rgba(15, 118, 110, 0.08), transparent 35%);
+  }
+
+  .dark .app-shell {
+    background-image: radial-gradient(circle at top, rgba(45, 212, 191, 0.12), transparent 35%);
+  }
+
+  .surface {
+    @apply rounded-3xl border bg-white/90 backdrop-blur dark:bg-slate-900/80;
+    box-shadow: 0 12px 40px rgba(15, 23, 42, 0.1);
+  }
+
+  .surface-muted {
+    @apply rounded-2xl border bg-slate-50/80 dark:bg-slate-950/60;
+  }
+
+  .text-muted {
+    @apply text-slate-500 dark:text-slate-400;
+  }
+
+  .container-app {
+    @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
+  }
+
+  .input {
+    @apply w-full rounded-2xl border bg-white px-4 py-3 text-sm outline-none transition focus:border-teal-600 focus:ring-4 focus:ring-teal-500/10 dark:border-slate-700 dark:bg-slate-900;
+  }
+
+  .btn-primary {
+    @apply inline-flex min-h-[44px] items-center justify-center rounded-2xl px-5 py-3 text-sm font-semibold text-white transition hover:opacity-95 active:scale-[0.98];
+    background-color: #0f766e;
+  }
+
+  .btn-secondary {
+    @apply inline-flex min-h-[44px] items-center justify-center rounded-2xl border bg-white px-5 py-3 text-sm font-semibold text-slate-800 transition hover:bg-slate-50 active:scale-[0.98] dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800;
+  }
+}
