@@ -3,16 +3,25 @@ import { db } from "@/lib/db";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { SAFE_USER_SELECT } from "@/lib/constants";
+import { getInitializationErrorResponse } from "@/lib/bootstrap";
 
 export async function GET(_, { params }) {
   try {
+    const initializationError = await getInitializationErrorResponse();
+
+    if (initializationError) {
+      return initializationError;
+    }
+
+    const { attemptId } = await params;
+
     const session = await getServerSession(authOptions);
     if (!session?.user?.id) {
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
 
     const attempt = await db.attempt.findUnique({
-      where: { id: params.attemptId },
+      where: { id: attemptId },
       include: {
         quiz: {
           select: {

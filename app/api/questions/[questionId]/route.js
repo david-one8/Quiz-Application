@@ -3,11 +3,20 @@ import { db } from "@/lib/db";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { canManageQuiz, isManager } from "@/lib/constants";
+import { getInitializationErrorResponse } from "@/lib/bootstrap";
 import { questionUpdateSchema } from "@/lib/validations";
 import { ZodError } from "zod";
 
 export async function GET(_, { params }) {
   try {
+    const initializationError = await getInitializationErrorResponse();
+
+    if (initializationError) {
+      return initializationError;
+    }
+
+    const { questionId } = await params;
+
     const session = await getServerSession(authOptions);
     if (!session?.user?.id) {
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
@@ -17,7 +26,7 @@ export async function GET(_, { params }) {
     }
 
     const question = await db.question.findUnique({
-      where: { id: params.questionId },
+      where: { id: questionId },
       include: {
         quiz: {
           select: {
@@ -44,6 +53,14 @@ export async function GET(_, { params }) {
 
 export async function PUT(req, { params }) {
   try {
+    const initializationError = await getInitializationErrorResponse();
+
+    if (initializationError) {
+      return initializationError;
+    }
+
+    const { questionId } = await params;
+
     const session = await getServerSession(authOptions);
     if (!session?.user?.id) {
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
@@ -53,7 +70,7 @@ export async function PUT(req, { params }) {
     }
 
     const existingQuestion = await db.question.findUnique({
-      where: { id: params.questionId },
+      where: { id: questionId },
       include: {
         quiz: {
           select: {
@@ -75,7 +92,7 @@ export async function PUT(req, { params }) {
     const validated = questionUpdateSchema.parse(body);
 
     const updated = await db.question.update({
-      where: { id: params.questionId },
+      where: { id: questionId },
       data: validated
     });
 
@@ -94,6 +111,14 @@ export async function PUT(req, { params }) {
 
 export async function DELETE(_, { params }) {
   try {
+    const initializationError = await getInitializationErrorResponse();
+
+    if (initializationError) {
+      return initializationError;
+    }
+
+    const { questionId } = await params;
+
     const session = await getServerSession(authOptions);
     if (!session?.user?.id) {
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
@@ -103,7 +128,7 @@ export async function DELETE(_, { params }) {
     }
 
     const existingQuestion = await db.question.findUnique({
-      where: { id: params.questionId },
+      where: { id: questionId },
       include: {
         quiz: {
           select: {
@@ -122,7 +147,7 @@ export async function DELETE(_, { params }) {
     }
 
     await db.question.delete({
-      where: { id: params.questionId }
+      where: { id: questionId }
     });
 
     return NextResponse.json({ message: "Question deleted" });

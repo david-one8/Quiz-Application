@@ -4,9 +4,16 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { attemptSchema } from "@/lib/validations";
 import { canManageQuiz, SAFE_USER_SELECT } from "@/lib/constants";
+import { getInitializationErrorResponse } from "@/lib/bootstrap";
 import { ZodError } from "zod";
 
 export async function GET() {
+  const initializationError = await getInitializationErrorResponse();
+
+  if (initializationError) {
+    return initializationError;
+  }
+
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) {
     return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
@@ -49,6 +56,12 @@ export async function GET() {
 
 export async function POST(req) {
   try {
+    const initializationError = await getInitializationErrorResponse();
+
+    if (initializationError) {
+      return initializationError;
+    }
+
     const session = await getServerSession(authOptions);
     if (!session?.user?.id) {
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });

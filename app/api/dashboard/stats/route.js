@@ -2,9 +2,16 @@ import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
+import { getInitializationErrorResponse } from "@/lib/bootstrap";
 
 export async function GET() {
   try {
+    const initializationError = await getInitializationErrorResponse();
+
+    if (initializationError) {
+      return initializationError;
+    }
+
     const session = await getServerSession(authOptions);
     if (!session?.user?.id) {
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
