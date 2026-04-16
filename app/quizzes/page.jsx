@@ -1,9 +1,12 @@
 import QuizCard from "@/components/quiz/QuizCard";
+import { requireInitializedApp } from "@/lib/bootstrap";
 import { db } from "@/lib/db";
 
 export const dynamic = "force-dynamic";
 
 export default async function PublicQuizPage() {
+  await requireInitializedApp();
+
   const quizzes = await db.quiz.findMany({
     where: { isPublished: true },
     orderBy: { createdAt: "desc" },

@@ -2,13 +2,17 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import Badge from "@/components/ui/Badge";
 import Card from "@/components/ui/Card";
+import { requireInitializedApp } from "@/lib/bootstrap";
 import { db } from "@/lib/db";
 
 export const dynamic = "force-dynamic";
 
 export default async function QuizDetailsPage({ params }) {
+  await requireInitializedApp();
+  const { quizId } = await params;
+
   const quiz = await db.quiz.findUnique({
-    where: { id: params.quizId },
+    where: { id: quizId },
     include: {
       _count: {
         select: {

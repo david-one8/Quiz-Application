@@ -9,9 +9,10 @@ export const dynamic = "force-dynamic";
 
 export default async function EditQuizPage({ params }) {
   const user = await requireRole(MANAGER_ROLES);
+  const { quizId } = await params;
 
   const quiz = await db.quiz.findUnique({
-    where: { id: params.quizId }
+    where: { id: quizId }
   });
 
   if (!quiz) notFound();
