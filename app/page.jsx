@@ -1,11 +1,14 @@
 import Link from "next/link";
 import ThemeToggle from "@/components/ui/ThemeToggle";
 import Logo from "@/components/shared/Logo";
+import { requireInitializedApp } from "@/lib/bootstrap";
 import { db } from "@/lib/db";
 
 export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
+  await requireInitializedApp();
+
   const [publishedQuizzes, questionCount, attemptCount, userCount] = await Promise.all([
     db.quiz.count({ where: { isPublished: true } }),
     db.question.count(),
