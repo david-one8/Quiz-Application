@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, FileText, CircleHelp, PenSquare, Trophy } from "lucide-react";
+import { LayoutDashboard, FileText, CircleHelp, PenSquare, Trophy, Users } from "lucide-react";
 import { useSession } from "next-auth/react";
 import Logo from "@/components/shared/Logo";
 import { cn } from "@/lib/utils";
@@ -12,6 +12,7 @@ const icons = {
   "/dashboard": LayoutDashboard,
   "/dashboard/quizzes": FileText,
   "/dashboard/questions": CircleHelp,
+  "/dashboard/users": Users,
   "/dashboard/attempts": PenSquare,
   "/dashboard/results": Trophy
 };
