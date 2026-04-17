@@ -63,8 +63,8 @@ export default function RegisterForm() {
 
           {serverError ? <p className="text-sm text-rose-500">{serverError}</p> : null}
 
-          <Button type="submit" className="w-full" disabled={isSubmitting}>
-            {isSubmitting ? "Creating..." : "Create account"}
+          <Button type="submit" className="w-full" loading={isSubmitting}>
+            Create account
           </Button>
         </form>
 

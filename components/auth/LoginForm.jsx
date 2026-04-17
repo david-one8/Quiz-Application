@@ -19,20 +19,31 @@ export default function LoginForm() {
   } = useForm();
 
   const onSubmit = async (values) => {
-    setServerError("");
+    try {
+      setServerError("");
+      console.log("Attempting sign in with:", values.email);
 
-    const res = await signIn("credentials", {
-      ...values,
-      redirect: false
-    });
+      const res = await signIn("credentials", {
+        ...values,
+        redirect: false
+      });
 
-    if (res?.error) {
-      setServerError(res.error);
-      return;
+      console.log("Sign in response:", res);
+
+      if (res?.error) {
+        setServerError(res.error);
+        return;
+      }
+
+      if (res?.ok) {
+        console.log("Login successful, redirecting to dashboard...");
+        router.push("/dashboard");
+        router.refresh();
+      }
+    } catch (error) {
+      console.error("Login component error:", error);
+      setServerError("An unexpected error occurred. Please try again.");
     }
-
-    router.push("/dashboard");
-    router.refresh();
   };
 
   return (
@@ -54,8 +65,8 @@ export default function LoginForm() {
 
           {serverError ? <p className="text-sm text-rose-500">{serverError}</p> : null}
 
-          <Button type="submit" className="w-full" disabled={isSubmitting}>
-            {isSubmitting ? "Signing in..." : "Login"}
+          <Button type="submit" className="w-full" loading={isSubmitting}>
+            Login
           </Button>
         </form>
 
