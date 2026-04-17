@@ -35,15 +35,21 @@ export async function POST(req) {
     }
 
     const hashedPassword = await bcrypt.hash(validated.password, 10);
+    const { seed, ...userData } = validated;
 
     const user = await db.user.create({
       data: {
-        ...validated,
+        ...userData,
         password: hashedPassword,
         role: "ADMIN"
       },
       select: SAFE_USER_SELECT
     });
+
+    if (seed) {
+      const { seedPlatform } = await import("@/lib/seed-data");
+      await seedPlatform(user.id);
+    }
 
     return NextResponse.json(user, { status: 201 });
   } catch (error) {
