@@ -1,6 +1,6 @@
-import { useId } from "react";
+import { forwardRef, useId } from "react";
 
-export default function Input({ label, error, ...props }) {
+const Input = forwardRef(({ label, error, ...props }, ref) => {
   const generatedId = useId();
   const inputId = props.id || generatedId;
 
@@ -11,8 +11,12 @@ export default function Input({ label, error, ...props }) {
           {label}
         </label>
       ) : null}
-      <input id={inputId} className="input" {...props} />
+      <input id={inputId} ref={ref} className="input" {...props} />
       {error && <p className="text-sm text-rose-500">{error}</p>}
     </div>
   );
-}
+});
+
+Input.displayName = "Input";
+
+export default Input;
