@@ -71,8 +71,8 @@ export default function QuizForm({ initialData }) {
         <span className="text-sm font-medium">Publish immediately</span>
       </label>
       {serverError ? <p className="text-sm text-rose-500">{serverError}</p> : null}
-      <Button type="submit" disabled={isSubmitting}>
-        {isSubmitting ? "Saving..." : initialData?.id ? "Update quiz" : "Create quiz"}
+      <Button type="submit" loading={isSubmitting}>
+        {initialData?.id ? "Update quiz" : "Create quiz"}
       </Button>
     </form>
   );
