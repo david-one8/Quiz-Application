@@ -3,11 +3,13 @@ import Header from "@/components/layout/Header";
 import MobileNav from "@/components/layout/MobileNav";
 import DashboardProviders from "@/components/layout/DashboardProviders";
 import { requireInitializedApp } from "@/lib/bootstrap";
+import { requireUser } from "@/lib/session";
 
 export const dynamic = "force-dynamic";
 
 export default async function DashboardLayout({ children }) {
   await requireInitializedApp();
+  await requireUser();
 
   return (
     <DashboardProviders>
