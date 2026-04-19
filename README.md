@@ -80,7 +80,7 @@ NEXTAUTH_SECRET=replace_with_a_long_random_secret
   MongoDB connection string for your local or cloud database.
 
 - `NEXTAUTH_URL`  
-  The base URL of the running app. For local development this should usually remain `http://localhost:3000`.
+  The base URL of the running app. For local development this must match the exact origin you are using, for example `http://localhost:3000`.
 
 - `NEXTAUTH_SECRET`  
   A secret used to sign sessions and auth tokens.
@@ -119,6 +119,7 @@ Important:
 
 - This setup flow is available only until the first admin is created.
 - After setup is complete, the app switches to normal login/register behavior.
+- Visiting `/setup` after initialization redirects to `/dashboard` for signed-in users and `/login` for signed-out users.
 
 ## 6. First-Run Workflow
 
@@ -207,7 +208,7 @@ app/
 
 components/
   auth/                 Login/register client forms
-  layout/               Sidebar, header, mobile nav, dashboard providers
+  layout/               Sidebar, header, and mobile nav
   quiz/                 Quiz and question UI
   setup/                Setup form
   ui/                   Reusable UI primitives
@@ -275,7 +276,7 @@ Verify:
 
 If auth behaves unexpectedly:
 
-- confirm `NEXTAUTH_URL=http://localhost:3000` for local use
+- confirm `NEXTAUTH_URL` matches the exact local origin you are using
 - set a valid `NEXTAUTH_SECRET`
 - restart the dev server after changing `.env`
 
