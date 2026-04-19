@@ -45,12 +45,15 @@ export default function RegisterForm() {
             label="Name"
             placeholder="Enter name"
             error={errors.name?.message}
+            autoComplete="name"
             {...register("name")}
           />
           <Input
             label="Email"
+            type="email"
             placeholder="Enter email"
             error={errors.email?.message}
+            autoComplete="email"
             {...register("email")}
           />
           <Input
@@ -58,6 +61,7 @@ export default function RegisterForm() {
             type="password"
             placeholder="Enter password"
             error={errors.password?.message}
+            autoComplete="new-password"
             {...register("password")}
           />
 

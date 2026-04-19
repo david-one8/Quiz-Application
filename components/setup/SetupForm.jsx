@@ -37,12 +37,15 @@ export default function SetupForm() {
         label="Admin name"
         placeholder="Enter full name"
         error={errors.name?.message}
+        autoComplete="name"
         {...register("name")}
       />
       <Input
         label="Admin email"
+        type="email"
         placeholder="Enter work email"
         error={errors.email?.message}
+        autoComplete="email"
         {...register("email")}
       />
       <Input
@@ -50,6 +53,7 @@ export default function SetupForm() {
         type="password"
         placeholder="Create password"
         error={errors.password?.message}
+        autoComplete="new-password"
         {...register("password")}
       />
 

@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="quiznovaGradient" x1="8" x2="56" y1="8" y2="56" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#14b8a6" />
+      <stop offset="1" stop-color="#0f766e" />
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="18" fill="url(#quiznovaGradient)" />
+  <path
+    d="M20 20h16c5.523 0 10 4.477 10 10v14h-8V30c0-1.105-.895-2-2-2H28v16h-8V20Z"
+    fill="#fff"
+  />
+  <circle cx="45" cy="45" r="7" fill="#ccfbf1" />
+</svg>

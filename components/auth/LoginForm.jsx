@@ -21,14 +21,11 @@ export default function LoginForm() {
   const onSubmit = async (values) => {
     try {
       setServerError("");
-      console.log("Attempting sign in with:", values.email);
 
       const res = await signIn("credentials", {
         ...values,
         redirect: false
       });
-
-      console.log("Sign in response:", res);
 
       if (res?.error) {
         setServerError(res.error);
@@ -36,12 +33,10 @@ export default function LoginForm() {
       }
 
       if (res?.ok) {
-        console.log("Login successful, redirecting to dashboard...");
         router.push("/dashboard");
         router.refresh();
       }
     } catch (error) {
-      console.error("Login component error:", error);
       setServerError("An unexpected error occurred. Please try again.");
     }
   };
@@ -55,11 +50,18 @@ export default function LoginForm() {
         </p>
 
         <form onSubmit={handleSubmit(onSubmit)} className="mt-6 space-y-4">
-          <Input label="Email" placeholder="Enter email" {...register("email")} />
+          <Input
+            label="Email"
+            type="email"
+            placeholder="Enter email"
+            autoComplete="email"
+            {...register("email")}
+          />
           <Input
             label="Password"
             type="password"
             placeholder="Enter password"
+            autoComplete="current-password"
             {...register("password")}
           />
 
