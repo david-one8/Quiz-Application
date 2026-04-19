@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { LayoutDashboard, FileText, CircleHelp, PenSquare, Trophy, Users } from "lucide-react";
-import { useSession } from "next-auth/react";
 import { cn } from "@/lib/utils";
 import { DASHBOARD_LINKS } from "@/lib/constants";
 
@@ -16,11 +15,8 @@ const icons = {
   "/dashboard/results": Trophy
 };
 
-export default function MobileNav() {
+export default function MobileNav({ role }) {
   const pathname = usePathname();
-  const { data: session } = useSession();
-  const role = session?.user?.role ?? "STUDENT";
-
   const items = DASHBOARD_LINKS.filter((item) => item.roles.includes(role));
 
   return (
